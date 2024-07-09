@@ -3,11 +3,11 @@ import re
 from pydantic import BaseModel, Field, field_validator
 
 
-class Group(BaseModel):
-    """Модель групп"""
-    title: str = Field(max_length=200, min_length=3)
-    slug: str = Field(max_length=50, min_length=3)
-    description: str = Field(max_length=350, min_length=3)
+class GroupBase(BaseModel):
+    """Базовая модель групп."""
+    title: str | None = Field(None, max_length=200, min_length=3)
+    slug: str | None = Field(None, max_length=50, min_length=3)
+    description: str | None = Field(None, max_length=350, min_length=3)
 
     @field_validator("slug")
     @classmethod
@@ -19,3 +19,19 @@ class Group(BaseModel):
                 буквы, цифры, дефисы и подчеркивания.")
 
         return slug
+
+
+class GroupCreate(GroupBase):
+    """Схема для создания групп."""
+    title: str = Field(max_length=200, min_length=3)
+    slug: str = Field(max_length=50, min_length=3)
+    description: str = Field(max_length=350, min_length=3)
+
+
+class GroupUpdate(GroupBase):
+    """Схема для изменения групп."""
+
+
+class GroupDB(GroupCreate):
+    """Схема для получения групп."""
+    id: int
