@@ -1,6 +1,6 @@
 import re
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, ValidationInfo
 
 
 class GroupBase(BaseModel):
@@ -30,6 +30,13 @@ class GroupCreate(GroupBase):
 
 class GroupUpdate(GroupBase):
     """Схема для изменения групп."""
+
+    @field_validator("title", "slug", "description")
+    def validate(cls, field: str, info: ValidationInfo) -> str:
+        """Проверяем, что полю не передано значение null."""
+        if field is None:
+            raise ValueError(f"Поле {info.field_name} не может быть пустым!")
+        return field
 
 
 class GroupDB(GroupCreate):

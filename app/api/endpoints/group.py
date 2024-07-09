@@ -50,8 +50,20 @@ async def patch_group(
         session: AsyncSession = Depends(get_async_session),
 ):
     """Обновление информации о группе."""
+    # Проверяем, что указанная группа существует
     group_db = await check_obj_exists_by_id(group_id, group_crud, session)
+    # Проверяем, что новый title уникальный
     if new_data.title is not None:
         await validate_same_names(new_data.title, group_crud, session)
     group = await group_crud.update(group_db, new_data, session)
+    return group
+
+@router.delete("/{group_id}", response_model=GroupDB)
+async def delete_group(
+        group_id: int,
+        session: AsyncSession = Depends(get_async_session)
+):
+    """Удаление группы."""
+    group_db = await check_obj_exists_by_id(group_id, group_crud, session)
+    group = await group_crud.delete(group_db, session)
     return group

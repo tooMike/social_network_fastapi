@@ -69,3 +69,14 @@ class CRUDbase:
         await session.commit()
         await session.refresh(db_obj)
         return db_obj
+
+    async def delete(
+            self,
+            db_obj,
+            session: AsyncSession
+    ):
+        """Удаление объекта из БД."""
+        await session.delete(db_obj)
+        await session.commit()
+        return db_obj
+
