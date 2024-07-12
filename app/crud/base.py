@@ -43,9 +43,12 @@ class CRUDbase:
             self,
             obj_in,
             session: AsyncSession,
+            user: User | None = None
     ):
         """Создание записи в БД."""
         obj_in = obj_in.dict()
+        if user:
+            obj_in["user_id"] = user.id
         obj_db = self.model(**obj_in)
         session.add(obj_db)
         await session.commit()
@@ -54,8 +57,8 @@ class CRUDbase:
 
     async def update(
             self,
-            db_obj: GroupDB,
-            obj_in: GroupUpdate,
+            db_obj,
+            obj_in,
             session: AsyncSession
     ):
         """Изменение объекта."""

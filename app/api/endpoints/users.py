@@ -7,7 +7,7 @@ router = APIRouter()
 
 router.include_router(
     fastapi_users.get_auth_router(auth_backend),
-    prefix='/jwt',
+    prefix='/auth/jwt',
     tags=['auth'],
 )
 
