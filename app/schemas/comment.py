@@ -1,6 +1,6 @@
-from pydantic import BaseModel, Field
-
 from datetime import datetime
+
+from pydantic import BaseModel, Field
 
 
 class CommentBase(BaseModel):
@@ -8,6 +8,9 @@ class CommentBase(BaseModel):
 
     text: str = Field(..., min_length=5)
 
+
+class CommentCreate(BaseModel):
+    """Модель для создания комментария."""
 
 
 class CommentDB(CommentBase):

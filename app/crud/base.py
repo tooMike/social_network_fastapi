@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.encoders import jsonable_encoder
-from app.models import User
+from app.models import Post, User
 from app.schemas.group import GroupDB, GroupUpdate
 
 
@@ -23,7 +23,8 @@ class CRUDbase:
 
     async def get_list(
             self,
-            session: AsyncSession
+            session: AsyncSession,
+            post: Post | None = None
     ):
         """Получение списка объектов."""
         objts = await session.execute(select(self.model))
@@ -43,12 +44,15 @@ class CRUDbase:
             self,
             obj_in,
             session: AsyncSession,
-            user: User | None = None
+            user: User | None = None,
+            post: Post | None = None
     ):
         """Создание записи в БД."""
         obj_in = obj_in.dict()
         if user:
             obj_in["user_id"] = user.id
+        if post:
+            obj_in["post_id"] = post.id
         obj_db = self.model(**obj_in)
         session.add(obj_db)
         await session.commit()

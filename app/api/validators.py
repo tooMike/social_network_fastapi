@@ -2,6 +2,8 @@ from fastapi import HTTPException, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.base import CRUDbase
+from app.crud.comment import comment_crud
+from app.models import Post
 from app.models.users import User
 
 
@@ -40,3 +42,23 @@ async def check_obj_exists_by_id(
                 detail='У вас нет прав на редактирование!'
             )
     return obj
+
+async def check_post_has_this_comment(
+        post_id: int,
+        comment_id: int,
+        session: AsyncSession
+):
+    comment = await comment_crud.get(obj_id=comment_id, session=session)
+    if comment:
+        if not (comment.post_id == post_id):
+            raise HTTPException(
+                status_code=404,
+                detail='У этого поста нет такого комментария'
+            )
+    else:
+        raise HTTPException(
+            status_code=404,
+            detail='Такого комментария не существует'
+        )
+    return comment
+
