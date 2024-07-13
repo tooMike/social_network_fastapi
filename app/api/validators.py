@@ -1,9 +1,8 @@
-from fastapi import HTTPException, Depends
+from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.base import CRUDbase
 from app.crud.comment import comment_crud
-from app.models import Post
 from app.models.users import User
 
 
@@ -36,12 +35,13 @@ async def check_obj_exists_by_id(
         )
     # Проверяем, имеет ли пользователь право редактировать объект
     if user:
-        if not (obj.user_id ==  user.id or user.is_superuser):
+        if not (obj.user_id == user.id or user.is_superuser):
             raise HTTPException(
                 status_code=403,
                 detail='У вас нет прав на редактирование!'
             )
     return obj
+
 
 async def check_post_has_this_comment(
         post_id: int,
@@ -49,6 +49,7 @@ async def check_post_has_this_comment(
         session: AsyncSession
 ):
     comment = await comment_crud.get(obj_id=comment_id, session=session)
+    # Проверяем
     if comment:
         if not (comment.post_id == post_id):
             raise HTTPException(
@@ -61,4 +62,3 @@ async def check_post_has_this_comment(
             detail='Такого комментария не существует'
         )
     return comment
-

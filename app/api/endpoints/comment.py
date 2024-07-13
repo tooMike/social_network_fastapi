@@ -65,7 +65,8 @@ async def get_comment(
         session: AsyncSession = Depends(get_async_session)
 ):
     """Получение конкретного комментария"""
-    post = await check_obj_exists_by_id(
+    # Проверяем, что такой пост существует
+    await check_obj_exists_by_id(
         obj_id=post_id,
         obj_crud=post_crud,
         session=session
