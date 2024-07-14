@@ -7,6 +7,7 @@ from app.core.db import Base
 
 class Comment(Base):
     """Модель комментария."""
+
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey('post.id'))
     post_id: Mapped[int] = mapped_column(Integer, ForeignKey('post.id'))
     text: Mapped[str] = mapped_column(String, nullable=False)

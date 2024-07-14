@@ -7,6 +7,7 @@ from app.models.post import Post
 
 
 class CRUDComment(CRUDbase):
+    """Комментарии"""
 
     async def get_posts_comment(
             self,

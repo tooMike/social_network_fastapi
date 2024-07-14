@@ -64,6 +64,7 @@ async def patch_post(
     post = await post_crud.update(obj_in=obj_in, db_obj=post, session=session)
     return post
 
+
 @router.delete('/{post.id}', response_model=PostDB)
 async def delete_post(
         post_id: int,
