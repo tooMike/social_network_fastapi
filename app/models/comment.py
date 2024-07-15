@@ -1,8 +1,14 @@
+import typing
+
 from sqlalchemy import DateTime, ForeignKey, Integer, String
 from sqlalchemy import func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.db import Base
+
+if typing.TYPE_CHECKING:
+    from app.models.post import Post
+    from app.models.users import User
 
 
 class Comment(Base):
@@ -15,6 +21,9 @@ class Comment(Base):
         DateTime,
         insert_default=func.now()
     )
+
+    user: Mapped['User'] = relationship(back_populates='comments')
+    post: Mapped['Post'] = relationship(back_populates='comments')
 
     def __repr__(self):
         return self.text[:25]

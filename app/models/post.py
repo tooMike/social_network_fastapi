@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 from sqlalchemy import ForeignKey, Integer, String, Text
 from sqlalchemy import func
@@ -7,9 +7,9 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.db import Base
 
-
-# from app.models.group import Group
-# from app.models.users import User
+if TYPE_CHECKING:
+    from app.models.group import Group
+    from app.models.users import User
 
 
 class Post(Base):
@@ -21,8 +21,8 @@ class Post(Base):
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey('user.id'))
     group_id: Mapped[int] = mapped_column(Integer, ForeignKey('group.id'))
 
-    user: Mapped['User'] = relationship('User', back_populates='posts')
-    group: Mapped['Group'] = relationship('Group', back_populates='posts')
+    user: Mapped['User'] = relationship(back_populates='posts')
+    group: Mapped['Group'] = relationship(back_populates='posts')
 
     def __repr__(self):
         return self.text[:25]
