@@ -18,7 +18,7 @@ async def create_post(
         post: PostCreate,
         user: User = Depends(current_user),
         session: AsyncSession = Depends(get_async_session)
-) -> PostDB:
+) -> PostCreate:
     post = await post_crud.create(obj_in=post, user=user, session=session)
     return post
 
