@@ -14,7 +14,7 @@ if typing.TYPE_CHECKING:
 class Comment(Base):
     """Модель комментария."""
 
-    user_id: Mapped[int] = mapped_column(Integer, ForeignKey('post.id'))
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey('user.id'))
     post_id: Mapped[int] = mapped_column(Integer, ForeignKey('post.id'))
     text: Mapped[str] = mapped_column(String, nullable=False)
     created_at: Mapped[DateTime] = mapped_column(

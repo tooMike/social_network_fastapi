@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class PostBase(BaseModel):
@@ -24,3 +24,7 @@ class PostUpdate(PostBase):
 
 class PostDB(PostCreate):
     """Модель для получения поста."""
+
+    username: str
+
+    model_config = ConfigDict(from_attributes=True)

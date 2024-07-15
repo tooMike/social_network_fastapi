@@ -10,6 +10,7 @@ from app.core.db import Base
 if TYPE_CHECKING:
     from app.models.group import Group
     from app.models.users import User
+    from app.models.comment import Comment
 
 
 class Post(Base):
@@ -23,6 +24,7 @@ class Post(Base):
 
     user: Mapped['User'] = relationship(back_populates='posts')
     group: Mapped['Group'] = relationship(back_populates='posts')
+    comments: Mapped['Comment'] = relationship(back_populates='post')
 
     def __repr__(self):
         return self.text[:25]

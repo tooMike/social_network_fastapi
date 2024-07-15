@@ -1,6 +1,12 @@
 import re
 
-from pydantic import BaseModel, Field, field_validator, ValidationInfo
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    field_validator,
+    ValidationInfo,
+)
 
 
 class GroupBase(BaseModel):
@@ -16,7 +22,8 @@ class GroupBase(BaseModel):
         if not pattern.match(slug):
             raise ValueError(
                 "Недопустимые символы в slug. Разрешены только \
-                буквы, цифры, дефисы и подчеркивания.")
+                буквы, цифры, дефисы и подчеркивания."
+            )
 
         return slug
 
@@ -42,3 +49,5 @@ class GroupUpdate(GroupBase):
 class GroupDB(GroupCreate):
     """Схема для получения групп."""
     id: int
+
+    model_config = ConfigDict(from_attributes=True)
