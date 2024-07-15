@@ -5,7 +5,6 @@ from sqlalchemy.orm import Mapped, relationship, mapped_column
 from sqlalchemy import String
 
 from app.core.db import Base
-from app.models.post import Post
 
 if TYPE_CHECKING:
     from app.models.post import Post
@@ -14,6 +13,7 @@ if TYPE_CHECKING:
 
 class User(SQLAlchemyBaseUserTable[int], Base):
     """Модель пользователя."""
+
     username: Mapped[str] = mapped_column(String, nullable=False)
 
     posts: Mapped[List['Post']] = relationship(back_populates='user')

@@ -20,6 +20,20 @@ async def validate_same_names(
         )
 
 
+async def validate_same_slugs(
+        obj_slug: str,
+        crud: CRUDbase,
+        session: AsyncSession
+):
+    """Проверка на уникальность title."""
+    obj = await crud.get_obj_by_slug(obj_slug, session)
+    if obj is not None:
+        raise HTTPException(
+            status_code=422,
+            detail='Группа с таким slug уже существует!',
+        )
+
+
 async def check_obj_exists_by_id(
         obj_id: int,
         obj_crud,

@@ -18,7 +18,7 @@ class Post(Base):
 
     text: Mapped[str] = mapped_column(Text, nullable=False)
     pub_date: Mapped[datetime] = mapped_column(insert_default=func.now())
-    image_path: Mapped[Optional[str]] = mapped_column(String)
+    image: Mapped[Optional[str]] = mapped_column(String)
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey('user.id'))
     group_id: Mapped[int] = mapped_column(Integer, ForeignKey('group.id'))
 

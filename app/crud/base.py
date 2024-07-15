@@ -24,7 +24,6 @@ class CRUDbase:
     async def get_list(
             self,
             session: AsyncSession,
-            post: Post | None = None
     ):
         """Получение списка объектов."""
         objts = await session.execute(select(self.model))
@@ -38,6 +37,16 @@ class CRUDbase:
         """Получение объекта по названию."""
         obj = await session.execute(
             select(self.model).where(self.model.title == title))
+        return obj.scalars().first()
+
+    async def get_obj_by_slug(
+            self,
+            slug: str,
+            session: AsyncSession
+    ):
+        """Получение объекта по slug."""
+        obj = await session.execute(
+            select(self.model).where(self.model.slug == slug))
         return obj.scalars().first()
 
     async def create(

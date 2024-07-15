@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.validators import validate_same_names
+from app.api.validators import validate_same_names, validate_same_slugs
 from app.core.db import get_async_session
+from app.core.users import current_superuser
 from app.crud.group import group_crud
 from app.schemas.group import GroupCreate, GroupDB
 
@@ -28,13 +29,23 @@ async def get_group(
     group = await group_crud.get(group_id, session)
     return group
 
-@router.post("/", response_model=GroupDB)
+
+@router.post(
+    "/",
+    response_model=GroupDB,
+    # dependencies=[Depends(current_superuser)]
+)
 async def create_group(
         obj: GroupCreate,
-        session: AsyncSession = Depends(get_async_session)
+        session: AsyncSession = Depends(get_async_session),
 ):
     await validate_same_names(
         obj_title=obj.title,
+        crud=group_crud,
+        session=session
+    )
+    await validate_same_slugs(
+        obj_slug=obj.slug,
         crud=group_crud,
         session=session
     )

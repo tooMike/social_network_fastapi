@@ -18,25 +18,29 @@ async def create_post(
         post: PostCreate,
         user: User = Depends(current_user),
         session: AsyncSession = Depends(get_async_session)
-):
+) -> PostDB:
     post = await post_crud.create(obj_in=post, user=user, session=session)
     return post
 
 
-@router.get('/', response_model=List[PostDB])
+@router.get('/', response_model=List[PostDB], response_model_exclude_none=True)
 async def get_posts(
         session: AsyncSession = Depends(get_async_session)
-):
+) -> List[PostDB]:
     """Получение списка постов."""
     posts = await post_crud.get_list(session=session)
     return posts
 
 
-@router.get('/{post_id}', response_model=PostDB)
+@router.get(
+    '/{post_id}',
+    response_model=PostDB,
+    response_model_exclude_none=True
+)
 async def get_post(
         post_id: int,
         session: AsyncSession = Depends(get_async_session)
-):
+) -> PostDB:
     """Получение конкретного поста."""
     await check_obj_exists_by_id(
         obj_id=post_id,
@@ -53,7 +57,7 @@ async def patch_post(
         obj_in: PostUpdate,
         user: User = Depends(current_user),
         session: AsyncSession = Depends(get_async_session),
-):
+) -> PostDB:
     """Обновление данные поста."""
     post = await check_obj_exists_by_id(
         obj_id=post_id,
@@ -70,7 +74,7 @@ async def delete_post(
         post_id: int,
         user: User = Depends(current_user),
         session: AsyncSession = Depends(get_async_session)
-):
+) -> PostDB:
     """Удаление поста."""
     post = await check_obj_exists_by_id(
         obj_id=post_id,

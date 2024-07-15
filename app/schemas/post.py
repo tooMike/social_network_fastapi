@@ -1,5 +1,7 @@
 from pydantic import BaseModel, ConfigDict, Field
 
+from datetime import datetime
+
 
 class PostBase(BaseModel):
     """Базовая модель поста."""
@@ -25,6 +27,8 @@ class PostUpdate(PostBase):
 class PostDB(PostCreate):
     """Модель для получения поста."""
 
-    username: str
+    id: int
+    author: str
+    pub_date: datetime
 
     model_config = ConfigDict(from_attributes=True)

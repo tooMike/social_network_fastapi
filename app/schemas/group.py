@@ -30,6 +30,7 @@ class GroupBase(BaseModel):
 
 class GroupCreate(GroupBase):
     """Схема для создания групп."""
+
     title: str = Field(max_length=200, min_length=3)
     slug: str = Field(max_length=50, min_length=3)
     description: str = Field(max_length=350, min_length=3)
