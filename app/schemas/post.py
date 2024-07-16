@@ -20,9 +20,27 @@ class PostUpdate(PostBase):
     @classmethod
     def validate_image(cls, value: str) -> str:
         if value:
-            header, _ = value.split(',', 1)
+            parts = value.split(',', 1)
+            if len(parts) != 2:
+                raise ValueError(
+                    'Невалидный формат изображения'
+                )
+
+            header, encoded = parts
             if not header.startswith('data:image'):
-                raise ValueError('Invalid image format')
+                raise ValueError(
+                    'Невалидный формат изображения. Начало должно быть – '
+                    'data:image'
+                )
+
+            # Проверка допустимого типа MIME
+            allowed_types = ['jpeg', 'png', 'gif']
+            if not any(f'image/{mime}' in header for mime in allowed_types):
+                raise ValueError(
+                    f'Невалидный формат изображения: разрешенные форматы: '
+                    f'{allowed_types}'
+                )
+
         return value
 
 
