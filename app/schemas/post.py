@@ -20,7 +20,7 @@ class PostUpdate(PostBase):
     @classmethod
     def validate_image(cls, value: str) -> str:
         if value:
-            parts = value.split(',', 1)
+            parts = value.split(',')
             if len(parts) != 2:
                 raise ValueError(
                     'Невалидный формат изображения'

@@ -40,7 +40,7 @@ async def create_comment(
     return comment
 
 
-@router.get('/{post_id}', response_model=List[CommentDB])
+@router.get('/{post_id}/comments/', response_model=List[CommentDB])
 async def get_all_comments(
         post_id: int,
         session: AsyncSession = Depends(get_async_session)
@@ -51,7 +51,7 @@ async def get_all_comments(
         obj_crud=post_crud,
         session=session
     )
-    comments = await comment_crud.get_list(
+    comments = await comment_crud.get_list_with_author(
         post=post,
         session=session
     )

@@ -9,12 +9,14 @@ class CommentBase(BaseModel):
     text: str = Field(..., min_length=5)
 
 
-class CommentCreate(BaseModel):
+class CommentCreate(CommentBase):
     """Модель для создания комментария."""
 
 
 class CommentDB(CommentBase):
     """Модель для отображения комментария."""
 
-    post_id: int
-    created_at: datetime
+    id: int
+    author: str
+    created: datetime
+    post: int

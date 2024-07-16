@@ -65,10 +65,10 @@ async def check_post_has_this_comment(
         comment_id: int,
         session: AsyncSession
 ):
-    comment = await comment_crud.get(obj_id=comment_id, session=session)
+    comment = await comment_crud.get_with_author(obj_id=comment_id, session=session)
     # Проверяем
     if comment:
-        if not (comment.post_id == post_id):
+        if not (comment["post"] == post_id):
             raise HTTPException(
                 status_code=404,
                 detail='У этого поста нет такого комментария'
