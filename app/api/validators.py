@@ -1,3 +1,5 @@
+import base64
+
 import aiofiles
 from fastapi import HTTPException, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -80,17 +82,19 @@ async def check_post_has_this_comment(
 
 
 async def validate_image(
-        image: UploadFile,
+        image: str,
 ):
     try:
-        file_location = f"static/images/{image.filename}"
-        async with aiofiles.open(file_location, 'wb') as f:
-            while content := await image.read():
-                await f.write(content)
-                return file_location
-    except Exception:
+        # Декодирование изображения из Base64
+        ext, imgstr = image.split(';base64,')
+        ext = ext.split('/')[-1]
+        image_bytes = base64.b64decode(imgstr)
+        image_path = "static/images/" + "123." + ext
+        with open(image_path, "wb") as f:
+            f.write(image_bytes)
+            return image_path
+    except Exception as e:
         raise HTTPException(
             status_code=400,
-            detail='Файл изображения не корректен, загрузите другое '
-                   'изображение'
+            detail=f"Could not decode image: {e}"
         )

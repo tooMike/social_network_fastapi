@@ -21,23 +21,20 @@ router = APIRouter()
 
 @router.post('/', response_model=PostDBBase)
 async def create_post(
-        post: str = Form(...),
-        image: UploadFile = File(...),
+        post: PostCreate,
         user: User = Depends(current_user),
         session: AsyncSession = Depends(get_async_session)
 ) -> PostDBBase:
-    post_data = json.loads(post)
-    post = PostCreate(**post_data)
     await check_obj_exists_by_id(
         obj_id=post.group_id,
         obj_crud=group_crud,
         session=session
     )
-    image_path = await validate_image(image=image)
+    image = await validate_image(image=post.image)
+    post.image = image
     post = await post_crud.create(
         obj_in=post,
         user=user,
-        image=image_path,
         session=session
     )
     return post
