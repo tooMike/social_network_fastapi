@@ -54,7 +54,8 @@ class CRUDbase:
             obj_in,
             session: AsyncSession,
             user: User | None = None,
-            post: Post | None = None
+            post: Post | None = None,
+            image: str | None = None,
     ):
         """Создание записи в БД."""
         obj_in = obj_in.dict()
@@ -62,6 +63,8 @@ class CRUDbase:
             obj_in["user_id"] = user.id
         if post:
             obj_in["post_id"] = post.id
+        if image:
+            obj_in["image"] = image
         obj_db = self.model(**obj_in)
         session.add(obj_db)
         await session.commit()

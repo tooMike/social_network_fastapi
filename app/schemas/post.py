@@ -8,7 +8,6 @@ class PostBase(BaseModel):
 
     text: str | None = Field(None, min_length=3)
     group_id: int | None = None
-    image: str | None = None
 
 
 class PostCreate(PostBase):
@@ -22,6 +21,12 @@ class PostUpdate(PostBase):
     """Модель для изменения поста."""
 
     text: str = Field(..., min_length=3)
+
+
+class PostDelete(BaseModel):
+    """Модель для удаления публикации."""
+
+    id: int
 
 
 class PostDB(PostCreate):

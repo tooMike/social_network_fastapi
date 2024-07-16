@@ -1,4 +1,5 @@
-from fastapi import HTTPException
+import aiofiles
+from fastapi import HTTPException, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.base import CRUDbase
@@ -76,3 +77,20 @@ async def check_post_has_this_comment(
             detail='Такого комментария не существует'
         )
     return comment
+
+
+async def validate_image(
+        image: UploadFile,
+):
+    try:
+        file_location = f"static/images/{image.filename}"
+        async with aiofiles.open(file_location, 'wb') as f:
+            while content := await image.read(1024 * 1024):
+                await f.write(content)
+                return file_location
+    except Exception:
+        raise HTTPException(
+            status_code=400,
+            detail='Файл изображения не корректен, загрузите другое '
+                   'изображение'
+        )

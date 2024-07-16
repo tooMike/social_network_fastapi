@@ -9,7 +9,7 @@ from app.schemas.post import PostCreate
 
 class PostCRUD(CRUDbase):
 
-    async def get(
+    async def get_with_author(
             self,
             obj_id: int,
             session: AsyncSession
@@ -30,7 +30,7 @@ class PostCRUD(CRUDbase):
             'group_id': post.group_id
         }
 
-    async def get_list(
+    async def get_list_with_author(
             self,
             session: AsyncSession
     ):
