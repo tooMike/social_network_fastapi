@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, File, UploadFile
+import json
+
+from fastapi import APIRouter, Depends, File, UploadFile, Form
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.validators import check_obj_exists_by_id, validate_image
@@ -7,18 +9,25 @@ from app.core.users import current_user
 from app.crud.group import group_crud
 from app.crud.post import post_crud
 from app.models.users import User
-from app.schemas.post import PostBase, PostCreate, PostDB, PostUpdate
+from app.schemas.post import (
+    PostCreate,
+    PostDB,
+    PostDBBase,
+    PostUpdate,
+)
 
 router = APIRouter()
 
 
-@router.post('/', response_model=PostCreate)
+@router.post('/', response_model=PostDBBase)
 async def create_post(
-        post: PostCreate,
+        post: str = Form(...),
         image: UploadFile = File(...),
         user: User = Depends(current_user),
         session: AsyncSession = Depends(get_async_session)
-) -> PostCreate:
+) -> PostDBBase:
+    post_data = json.loads(post)
+    post = PostCreate(**post_data)
     await check_obj_exists_by_id(
         obj_id=post.group_id,
         obj_crud=group_crud,
@@ -62,13 +71,13 @@ async def get_post(
     return post
 
 
-@router.patch('/{post_id}', response_model=PostUpdate)
+@router.patch('/{post_id}', response_model=PostDBBase)
 async def patch_post(
         post_id: int,
         obj_in: PostUpdate,
         user: User = Depends(current_user),
         session: AsyncSession = Depends(get_async_session),
-) -> PostUpdate:
+) -> PostDBBase:
     """Обновление данных поста."""
     post = await check_obj_exists_by_id(
         obj_id=post_id,
@@ -86,12 +95,12 @@ async def patch_post(
     return post
 
 
-@router.delete('/{post.id}', response_model=PostBase)
+@router.delete('/{post.id}', response_model=PostDBBase)
 async def delete_post(
         post_id: int,
         user: User = Depends(current_user),
         session: AsyncSession = Depends(get_async_session)
-) -> PostBase:
+) -> PostDBBase:
     """Удаление поста."""
     post = await check_obj_exists_by_id(
         obj_id=post_id,

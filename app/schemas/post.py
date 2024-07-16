@@ -1,6 +1,6 @@
-from pydantic import BaseModel, ConfigDict, Field
-
 from datetime import datetime
+
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class PostBase(BaseModel):
@@ -29,11 +29,17 @@ class PostDelete(BaseModel):
     id: int
 
 
-class PostDB(PostCreate):
+class PostDBBase(PostCreate):
     """Модель для получения поста."""
 
     id: int
-    author: str
     pub_date: datetime
+    image: str
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class PostDB(PostDBBase):
+    """Модель для получения поста c автором."""
+
+    author: str

@@ -85,7 +85,7 @@ async def validate_image(
     try:
         file_location = f"static/images/{image.filename}"
         async with aiofiles.open(file_location, 'wb') as f:
-            while content := await image.read(1024 * 1024):
+            while content := await image.read():
                 await f.write(content)
                 return file_location
     except Exception:
